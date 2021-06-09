@@ -37,6 +37,11 @@ import org.apache.zookeeper.server.auth.SaslServerCallbackHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * zookeeper的网络io管理器抽象层，用来管理与客户端的连接。
+ * 有两个实现： nio实现的NIOServerCnxnFactory;  netty实现的NettyServerCnxnFactory
+ * zookeeper可以设置系统属性zookeeper.serverCnxnFactory来配置ServerCnxnFactory的实现类，默认使用NIOServerCnxnFactory
+ */
 public abstract class ServerCnxnFactory {
 
     public static final String ZOOKEEPER_SERVER_CNXN_FACTORY = "zookeeper.serverCnxnFactory";

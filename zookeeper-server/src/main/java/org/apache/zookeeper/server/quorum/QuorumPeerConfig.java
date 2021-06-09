@@ -102,7 +102,9 @@ public class QuorumPeerConfig {
     protected long serverId = UNSET_SERVERID;
 
     protected QuorumVerifier quorumVerifier = null, lastSeenQuorumVerifier = null;
+    // 保留多少快照文件
     protected int snapRetainCount = 3;
+    // 多长时间清除一次
     protected int purgeInterval = 0;
     protected boolean syncEnabled = true;
 

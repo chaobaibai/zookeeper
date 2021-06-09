@@ -22,6 +22,7 @@ package org.apache.zookeeper.server.util;
  * This incremental hash is used to keep track of the hash of
  * the data tree to that we can quickly validate that things
  * are in sync.
+ * 增量记录所有节点摘要的总和
  *
  * See the excellent paper: A New Paradigm for collision-free hashing:
  *   Incrementality at reduced cost,  M. Bellare and D. Micciancio

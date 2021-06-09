@@ -78,16 +78,18 @@ public class PurgeTxnLog {
         }
 
         FileTxnSnapLog txnLog = new FileTxnSnapLog(dataDir, snapDir);
-
+        // 1.找到最近的n个合法的快照文件
         List<File> snaps = txnLog.findNValidSnapshots(num);
         int numSnaps = snaps.size();
         if (numSnaps > 0) {
+            // 2.比需要保留的快照文件集合中的最老的一个文件还要老的快照文件通通清除掉
             purgeOlderSnapshots(txnLog, snaps.get(numSnaps - 1));
         }
     }
 
     // VisibleForTesting
     static void purgeOlderSnapshots(FileTxnSnapLog txnLog, File snapShot) {
+        // 1. 拿到需要保留的快照文件集合中的最老的一个文件的zxid
         final long leastZxidToBeRetain = Util.getZxidFromName(snapShot.getName(), PREFIX_SNAPSHOT);
 
         /**
@@ -109,6 +111,8 @@ public class PurgeTxnLog {
          * recoverability of all snapshots being retained.  We determine that log file here by
          * calling txnLog.getSnapshotLogs().
          */
+
+        // 2.获取需要保留的日志文件
         final Set<File> retainedTxnLogs = new HashSet<File>();
         retainedTxnLogs.addAll(Arrays.asList(txnLog.getSnapshotLogs(leastZxidToBeRetain)));
 
@@ -135,6 +139,7 @@ public class PurgeTxnLog {
 
         }
         // add all non-excluded log files
+        // 2.根据zxid获取到更老的日志文件集合
         File[] logs = txnLog.getDataDir().listFiles(new MyFileFilter(PREFIX_LOG));
         List<File> files = new ArrayList<>();
         if (logs != null) {
@@ -142,12 +147,14 @@ public class PurgeTxnLog {
         }
 
         // add all non-excluded snapshot files to the deletion list
+        // 3. 根据zxid获取到更老的快照文件集合
         File[] snapshots = txnLog.getSnapDir().listFiles(new MyFileFilter(PREFIX_SNAPSHOT));
         if (snapshots != null) {
             files.addAll(Arrays.asList(snapshots));
         }
 
         // remove the old files
+        // 4.将需要删除的文件删除
         for (File f : files) {
             final String msg = String.format(
                 "Removing file: %s\t%s",

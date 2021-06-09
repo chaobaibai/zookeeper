@@ -121,6 +121,7 @@ public class QuorumPeerMain {
     protected void initializeAndRun(String[] args) throws ConfigException, IOException, AdminServerException {
         QuorumPeerConfig config = new QuorumPeerConfig();
         if (args.length == 1) {
+            // 1. 解析配置文件
             config.parse(args[0]);
         }
 
@@ -130,8 +131,10 @@ public class QuorumPeerMain {
             config.getDataLogDir(),
             config.getSnapRetainCount(),
             config.getPurgeInterval());
+        // 2.触发定时任务，定时清除数据和日志文件
         purgeMgr.start();
 
+        // 3.判断集群启动还是单机启动
         if (args.length == 1 && config.isDistributed()) {
             runFromConfig(config);
         } else {

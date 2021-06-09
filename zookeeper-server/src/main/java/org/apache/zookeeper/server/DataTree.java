@@ -101,6 +101,7 @@ public class DataTree {
     /**
      * This map provides a fast lookup to the datanodes. The tree is the
      * source of truth and is where all the locking occurs
+     * zookeeper节点的集合，绝对路径到DataNode的映射
      */
     private final NodeHashMap nodes;
 
@@ -108,10 +109,14 @@ public class DataTree {
 
     private IWatchManager childWatches;
 
-    /** cached total size of paths and data for all DataNodes */
+    /**
+     *  cached total size of paths and data for all DataNodes
+     *  所有节点的path和data的数据大小近似总和
+     * */
     private final AtomicLong nodeDataSize = new AtomicLong(0);
 
     /** the root of zookeeper tree */
+    // zk根节点
     private static final String rootZookeeper = "/";
 
     /** the zookeeper nodes that acts as the management and status node **/
@@ -150,6 +155,7 @@ public class DataTree {
 
     /**
      * This hashtable lists the paths of the ephemeral nodes of a session.
+     * 临时节点的集合，key为sessionId, value为该会话涉及到的path集合
      */
     private final Map<Long, HashSet<String>> ephemerals = new ConcurrentHashMap<Long, HashSet<String>>();
 
@@ -163,6 +169,7 @@ public class DataTree {
      */
     private final Set<String> ttls = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
 
+    // 记录一个acl与Long的关联关系
     private final ReferenceCountedACLCache aclCache = new ReferenceCountedACLCache();
 
     // The maximum number of tree digests that we will keep in our history
@@ -187,6 +194,7 @@ public class DataTree {
     // The historical digests list.
     private LinkedList<ZxidDigest> digestLog = new LinkedList<>();
 
+    // 节点摘要的计算器（摘要计算辅助类）
     private final DigestCalculator digestCalculator;
 
     @SuppressWarnings("unchecked")
@@ -264,17 +272,20 @@ public class DataTree {
     /**
      * This is a pointer to the root of the DataTree. It is the source of truth,
      * but we usually use the nodes hashmap to find nodes in the tree.
+     * 根节点
      */
     private DataNode root = new DataNode(new byte[0], -1L, new StatPersisted());
 
     /**
      * create a /zookeeper filesystem that is the proc filesystem of zookeeper
+     * /zookeeper节点
      */
     private final DataNode procDataNode = new DataNode(new byte[0], -1L, new StatPersisted());
 
     /**
      * create a /zookeeper/quota node for maintaining quota properties for
      * zookeeper
+     * /zookeeper/quota节点
      */
     private final DataNode quotaDataNode = new DataNode(new byte[0], -1L, new StatPersisted());
 

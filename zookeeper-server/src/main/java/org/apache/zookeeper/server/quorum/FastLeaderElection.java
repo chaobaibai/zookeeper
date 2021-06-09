@@ -46,6 +46,8 @@ import org.slf4j.LoggerFactory;
  * There are a few parameters that can be tuned to change its behavior. First,
  * finalizeWait determines the amount of time to wait until deciding upon a leader.
  * This is part of the leader election algorithm.
+ *
+ * finalizeWait 决定了选举一个leader等待的时间
  */
 
 public class FastLeaderElection implements Election {
@@ -56,6 +58,8 @@ public class FastLeaderElection implements Election {
      * Determine how much time a process has to wait
      * once it believes that it has reached the end of
      * leader election.
+     *
+     * 实际此时间是节点等待收取其他节点选举消息(Notification)的时间
      */
     static final int finalizeWait = 200;
 

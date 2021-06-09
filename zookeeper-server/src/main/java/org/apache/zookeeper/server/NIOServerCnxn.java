@@ -222,6 +222,7 @@ public class NIOServerCnxn extends ServerCnxn {
          * limit to the size of the buffer, so that we can fill it
          * with data from the non-direct buffers that we need to
          * send.
+         * 尝试获取直接内存
          */
         ByteBuffer directBuffer = NIOServerCnxnFactory.getDirectBuffer();
         if (directBuffer == null) {

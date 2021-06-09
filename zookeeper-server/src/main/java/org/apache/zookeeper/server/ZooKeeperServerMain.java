@@ -97,18 +97,19 @@ public class ZooKeeperServerMain {
 
     protected void initializeAndRun(String[] args) throws ConfigException, IOException, AdminServerException {
         try {
+            // 1.注册log4jBean
             ManagedUtil.registerLog4jMBeans();
         } catch (JMException e) {
             LOG.warn("Unable to register log4j JMX control", e);
         }
-
+        // 1.解析配置文件
         ServerConfig config = new ServerConfig();
         if (args.length == 1) {
             config.parse(args[0]);
         } else {
             config.parse(args);
         }
-
+        // 2. 通过配置服务端启动
         runFromConfig(config);
     }
 
@@ -134,20 +135,25 @@ public class ZooKeeperServerMain {
             // so rather than spawning another thread, we will just call
             // run() in this thread.
             // create a file logger url from the command line args
+            // 1.创建快照和事务日志文件管理对象
             txnLog = new FileTxnSnapLog(config.dataLogDir, config.dataDir);
             JvmPauseMonitor jvmPauseMonitor = null;
             if (config.jvmPauseMonitorToRun) {
                 jvmPauseMonitor = new JvmPauseMonitor(config);
             }
+            // 2. 创建zk服务对象实例
             final ZooKeeperServer zkServer = new ZooKeeperServer(jvmPauseMonitor, txnLog, config.tickTime, config.minSessionTimeout, config.maxSessionTimeout, config.listenBacklog, null, config.initialConfig);
+            // 设置服务统计实例
             txnLog.setServerStats(zkServer.serverStats());
 
             // Registers shutdown handler which will be used to know the
             // server error or shutdown state changes.
+            // 服务启动完成后，会调用shutdownLatch.await()方法时主线程阻塞
             final CountDownLatch shutdownLatch = new CountDownLatch(1);
             zkServer.registerServerShutdownHandler(new ZooKeeperServerShutdownHandler(shutdownLatch));
 
             // Start Admin server
+            // 启动admin server,默认时jeetyAdminServer,启动之后可以查看服务的状态信息 http://localhost:8080/commands
             adminServer = AdminServerFactory.createAdminServer();
             adminServer.setZooKeeperServer(zkServer);
             adminServer.start();

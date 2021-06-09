@@ -170,6 +170,8 @@ public class NIOServerCnxnFactory extends ServerCnxnFactory {
      * them across the SelectorThreads. It enforces maximum number of
      * connections per IP and attempts to cope with running out of file
      * descriptors by briefly sleeping before retrying.
+     *
+     * 接收来自客户端的连接，将其分配给selectorThread
      */
     private class AcceptThread extends AbstractSelectThread {
 
@@ -328,10 +330,13 @@ public class NIOServerCnxnFactory extends ServerCnxnFactory {
      *
      * If there is no worker thread pool, the SelectorThread performs the I/O
      * directly.
+     *
+     * 该线程执行select(),由于在处理大量连接时，select()会成为性能瓶颈，因此启动多个selectThread
      */
     class SelectorThread extends AbstractSelectThread {
 
         private final int id;
+        // 线程间通讯队列，包含客户端的连接，由selectorThread将客户端连接注册到selector上
         private final Queue<SocketChannel> acceptedQueue;
         private final Queue<SelectionKey> updateQueue;
 
@@ -553,6 +558,7 @@ public class NIOServerCnxnFactory extends ServerCnxnFactory {
     /**
      * This thread is responsible for closing stale connections so that
      * connections on which no session is established are properly expired.
+     * 如果连接上的session过期，则关闭该连接。
      */
     private class ConnectionExpirerThread extends ZooKeeperThread {
 

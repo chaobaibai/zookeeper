@@ -40,10 +40,12 @@ import org.apache.zookeeper.data.StatPersisted;
 public class DataNode implements Record {
 
     // the digest value of this node, calculated from path, data and stat
+    // path,data,和stat的摘要内容
     private volatile long digest;
 
     // indicate if the digest of this node is up to date or not, used to
     // optimize the performance.
+    // znode的摘要是否发生变化
     volatile boolean digestCached;
 
     /** the data for this datanode */
@@ -63,6 +65,7 @@ public class DataNode implements Record {
      * the list of children for this node. note that the list of children string
      * does not contain the parent path -- just the last part of the path. This
      * should be synchronized on except deserializing (for speed up issues).
+     * 子节点的路径
      */
     private Set<String> children = null;
 

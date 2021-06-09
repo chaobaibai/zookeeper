@@ -34,6 +34,7 @@ public class NodeHashMapImpl implements NodeHashMap {
     private final boolean digestEnabled;
     private final DigestCalculator digestCalculator;
 
+    // 记录所有节点摘要的总和
     private final AdHash hash;
 
     public NodeHashMapImpl(DigestCalculator digestCalculator) {

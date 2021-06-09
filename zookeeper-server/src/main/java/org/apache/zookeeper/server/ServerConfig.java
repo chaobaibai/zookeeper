@@ -40,15 +40,23 @@ public class ServerConfig {
     //// If you update the configuration parameters be sure
     //// to update the "conf" 4letter word
     ////
+    // 客户端连接端口
     protected InetSocketAddress clientPortAddress;
+    // 客户端安全连接端口
     protected InetSocketAddress secureClientPortAddress;
+    // 数据目录
     protected File dataDir;
+    // 日志目录
     protected File dataLogDir;
+    // zookeeper心跳时间单位，，默认3000ms
     protected int tickTime = ZooKeeperServer.DEFAULT_TICK_TIME;
+    // 单个客户端与单台服务器之间连接数的显示，ip级别，设置为0则表示不显示，
     protected int maxClientCnxns;
     /** defaults to -1 if not set explicitly */
+    // 最小的会话超时时间
     protected int minSessionTimeout = -1;
     /** defaults to -1 if not set explicitly */
+    // 最大的会话超时时间
     protected int maxSessionTimeout = -1;
     protected String metricsProviderClassName = DefaultMetricsProvider.class.getName();
     protected Properties metricsProviderConfiguration = new Properties();

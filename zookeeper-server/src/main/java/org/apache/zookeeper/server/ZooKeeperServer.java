@@ -489,12 +489,14 @@ public class ZooKeeperServer implements SessionExpirer, ServerStats.Provider {
          * See ZOOKEEPER-1642 for more detail.
          */
         if (zkDb.isInitialized()) {
+            // 设置最新的zxid
             setZxid(zkDb.getDataTreeLastProcessedZxid());
         } else {
             setZxid(zkDb.loadDataBase());
         }
 
         // Clean up dead sessions
+        // 清理session
         List<Long> deadSessions = new ArrayList<>();
         for (Long session : zkDb.getSessions()) {
             if (zkDb.getSessionWithTimeOuts().get(session) == null) {
@@ -681,13 +683,17 @@ public class ZooKeeperServer implements SessionExpirer, ServerStats.Provider {
 
     private void startupWithServerState(State state) {
         if (sessionTracker == null) {
+            // 创建sessionTracker会话管理器
             createSessionTracker();
         }
+        // 启动会话管理器
         startSessionTracker();
+        // 启动请求流程处理器
         setupRequestProcessors();
 
         startRequestThrottler();
 
+        // 注册jmx
         registerJMX();
 
         startJvmPauseMonitor();

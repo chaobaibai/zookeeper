@@ -97,12 +97,14 @@ public class DatadirCleanupManager {
             return;
         }
         // Don't schedule the purge task with zero or negative purge interval.
+        // 间隔多次时间清除一次,默认是0
         if (purgeInterval <= 0) {
             LOG.info("Purge task is not scheduled.");
             return;
         }
 
         timer = new Timer("PurgeTask", true);
+        // 创建一个清理任务
         TimerTask task = new PurgeTask(dataLogDir, snapDir, snapRetainCount);
         timer.scheduleAtFixedRate(task, 0, TimeUnit.HOURS.toMillis(purgeInterval));
 

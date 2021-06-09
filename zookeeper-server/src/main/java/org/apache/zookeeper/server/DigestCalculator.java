@@ -25,6 +25,7 @@ import org.apache.zookeeper.data.StatPersisted;
 
 /**
  * Defines how to calculate the digest for a given node.
+ * 摘要计算器
  */
 public class DigestCalculator {
 
@@ -65,6 +66,7 @@ public class DigestCalculator {
         //
         // Instead of taking time to fix that, we decided to disable digest
         // check for all the nodes under /zookeeper/ first.
+        // /zookeeper/ 下的节点禁用摘要检查
         //
         // We can enable this after fixing that inconsistent problem. The
         // digest version in the protocol enables us to change the digest

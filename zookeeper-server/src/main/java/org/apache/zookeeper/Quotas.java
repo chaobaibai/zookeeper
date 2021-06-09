@@ -22,25 +22,31 @@ package org.apache.zookeeper;
  * this class manages quotas
  * and has many other utils
  * for quota
+ * 管理节点的配额
  */
 public class Quotas {
 
     /** the zookeeper nodes that acts as the management and status node **/
+    // zookeeper节点的path
     public static final String procZookeeper = "/zookeeper";
 
     /** the zookeeper quota node that acts as the quota
      * management node for zookeeper */
+    // 配额节点的路径
     public static final String quotaZookeeper = "/zookeeper/quota";
 
     /**
      * the limit node that has the limit of
      * a subtree
+     * 对于节点限制配额的路径：/zookeeper/quota/ + 限制节点的绝对path + /zookeeper_limits
+     * 对于节点的限制配额分两种，二选其一： 1.子树节点的个数限制（包含自身） 2.节点字节大小限制
      */
     public static final String limitNode = "zookeeper_limits";
 
     /**
      * the stat node that monitors the limit of
      * a subtree.
+     * 监控当前限制节点的子树节点个数（包含自身）和子树数据字节大小（包含自身）
      */
     public static final String statNode = "zookeeper_stats";
 
